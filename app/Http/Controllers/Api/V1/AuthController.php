@@ -16,41 +16,52 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if ($token = JWTAuth::attempt($credentials)) {
-
-            return response()->json([
-                'code' => ResponseEnum::OK,
-                'message' => 'Đăng nhập thành công.',
-                'data' => $this->respondWithToken($token) // Phương thức respondWithToken phải được định nghĩa để trả về token
-            ]);
+            return $this->respondWithToken($token, 'Đăng nhập thành công.');
         }
-
         return response()->json([
-            'code' => ResponseEnum::BAD_REQUEST,
-            'message' => 'Email hoặc mật khẩu không chính xác.',
+            'status' => ResponseEnum::UNAUTHORIZED,
+            'messages' => ['Email hoặc mật khẩu không chính xác.'],
             'data' => []
-        ]);
+        ], ResponseEnum::UNAUTHORIZED);
     }
     public function me()
     {
         return response()->json(Auth::user());
     }
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, $message)
     {
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
+            'status' => ResponseEnum::OK,
+            'messages' => [$message],
+            'data' => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60,
+                'user' => Auth::user()
+            ]
+        ], ResponseEnum::OK)->cookie(
+            'access_token',
+            $token,
+            config('jwt.ttl'),
+            '/',
+            'localhost',
+            false,
+            true
+        );
     }
 
-    public function refresh()
+    public function refreshToken()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(auth()->refresh(), 'Token đã được thay đổi');
     }
 
     public function logout()
     {
         Auth::logout();
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json([
+            'status' => ResponseEnum::OK,
+            'messages' => 'Đăng xuất thành công.',
+            'data' => []
+        ], ResponseEnum::OK);
     }
 }

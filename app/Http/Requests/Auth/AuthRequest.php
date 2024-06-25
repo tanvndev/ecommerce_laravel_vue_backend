@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Enums\ResponseEnum;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -45,9 +46,9 @@ class AuthRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'code' => 400,
+            'status' => ResponseEnum::BAD_REQUEST,
             'messages' => $validator->errors(),
             'data' => []
-        ]));
+        ], 400));
     }
 }
