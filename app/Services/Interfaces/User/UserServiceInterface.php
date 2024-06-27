@@ -1,12 +1,8 @@
 <?php
 
-namespace App\Services\Interfaces;
+namespace App\Services\Interfaces\User;
 
-/**
- * Interface UserCatalogueServiceInterface
- * @package App\Services\Interfaces
- */
-interface UserCatalogueServiceInterface
+interface UserServiceInterface
 {
     public function paginate();
     public function create();
@@ -14,5 +10,4 @@ interface UserCatalogueServiceInterface
     public function destroy($id);
     public function updateStatus();
     public function updateStatusAll();
-    public function setPermission();
 }
