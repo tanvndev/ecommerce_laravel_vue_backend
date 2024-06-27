@@ -2,9 +2,10 @@
 
 use App\Http\Controllers\Api\V1\{
     AuthController,
-    DashboardController
+    DashboardController,
+    UserCatalogueController,
+    UserController
 };
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,7 +26,20 @@ Route::post('/v1/auth/logout', [AuthController::class, 'logout']);
 
 
 
-// Routes for Languages
-Route::prefix('/v1/dashboard')->middleware('jwt.verify')->name('dashboard.')->group(function () {
-    Route::get('getSidebar', [DashboardController::class, 'getSidebar'])->name('getSidebar');
+
+Route::group(['middleware' => 'jwt.verify'], function () {
+    // Routes for dashboard
+    Route::prefix('/v1/dashboard')->name('dashboard.')->group(function () {
+        // Route::get('getSidebar', [DashboardController::class, 'getSidebar'])->name('getSidebar');
+    });
+
+    // Routes for user
+    Route::prefix('/v1/user')->name('user.')->group(function () {
+        Route::apiResource('/', UserController::class);
+    });
+
+    // Routes for user catalogue
+    Route::prefix('/v1/user/catalogue')->name('user.catalogue.')->group(function () {
+        Route::apiResource('/', UserCatalogueController::class);
+    });
 });
