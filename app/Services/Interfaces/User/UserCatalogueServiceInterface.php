@@ -13,6 +13,7 @@ interface UserCatalogueServiceInterface
     public function update($id);
     public function destroy($id);
     public function updateStatus();
-    public function updateStatusAll();
+    public function updateStatusMultiple();
+    public function deleteMultiple();
     public function setPermission();
 }

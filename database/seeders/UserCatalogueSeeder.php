@@ -13,7 +13,7 @@ class UserCatalogueSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 1000; $i <= 10000; $i++) {
+        for ($i = 20; $i <= 30; $i++) {
             DB::table('user_catalogues')->insert([
                 'name' => 'User Catalogue ' . $i,
                 'description' => 'Description of User ' . $i,

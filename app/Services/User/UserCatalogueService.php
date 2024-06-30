@@ -51,14 +51,14 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
             DB::commit();
             return [
                 'status' => 'success',
-                'messages' => 'Thêm mới nhóm thành viên thành công.',
+                'messages' => 'Thêm mới thành công.',
                 'data' => null
             ];
         } catch (\Exception $e) {
             DB::rollBack();
             return [
                 'status' => 'error',
-                'messages' => 'Thêm mới nhóm thành viên thất bại.',
+                'messages' => 'Thêm mới thất bại.',
                 'data' => null
             ];
         }
@@ -70,18 +70,21 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         try {
             // Lấy ra tất cả các trường và loại bỏ 2 trường bên dưới
             $payload = request()->except('_token', '_method');
-            $update =  $this->userCatalogueRepository->update($id, $payload);
+            $this->userCatalogueRepository->update($id, $payload);
 
-            if (!$update) {
-                DB::rollBack();
-                return false;
-            }
             DB::commit();
-            return true;
+            return [
+                'status' => 'success',
+                'messages' => 'Cập nhập thành công.',
+                'data' => null
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
-            return false;
+            return [
+                'status' => 'error',
+                'messages' => 'Cập nhập thất bại.',
+                'data' => null
+            ];
         }
     }
 
@@ -90,18 +93,20 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         DB::beginTransaction();
         try {
             // Xoá mềm
-            $delete =  $this->userCatalogueRepository->delete($id);
-
-            if (!$delete) {
-                DB::rollBack();
-                return false;
-            }
+            $this->userCatalogueRepository->delete($id);
             DB::commit();
-            return true;
+            return [
+                'status' => 'success',
+                'messages' => 'Xóa thành công.',
+                'data' => null
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
-            return false;
+            return [
+                'status' => 'error',
+                'messages' => 'Xóa thất bại.',
+                'data' => null
+            ];
         }
     }
 

@@ -18,6 +18,7 @@ interface BaseRepositoryInterface
     public function delete($modelId);
     public function updateOrInsert($payload = [], $conditions = []);
     public function deleteByWhere($conditions = []);
+    public function deleteByWhereIn($whereInField = '', $whereIn = []);
     public function forceDelete($modelId);
     public function forceDeleteByWhere($conditions);
     public function pagination(

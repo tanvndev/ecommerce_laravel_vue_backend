@@ -6,17 +6,19 @@ use App\Enums\ResponseEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\UserCatalogue\StoreUserCatalogueRequest;
 use App\Http\Requests\V1\UserCatalogue\UpdateUserCatalogueRequest;
+use App\Repositories\Interfaces\User\UserCatalogueRepositoryInterface;
 use App\Services\Interfaces\User\UserCatalogueServiceInterface;
-
-use Illuminate\Http\Request;
 
 class UserCatalogueController extends Controller
 {
     protected $userCatalogueService;
+    protected $userCatalogueRepository;
     public function __construct(
-        UserCatalogueServiceInterface $userCatalogueService
+        UserCatalogueServiceInterface $userCatalogueService,
+        UserCatalogueRepositoryInterface $userCatalogueRepository
     ) {
         $this->userCatalogueService = $userCatalogueService;
+        $this->userCatalogueRepository = $userCatalogueRepository;
     }
     /**
      * Display a listing of the resource.
@@ -29,20 +31,12 @@ class UserCatalogueController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreUserCatalogueRequest $request)
     {
         $response = $this->userCatalogueService->create();
-        $statusCode = $response['status'] == 'success' ? ResponseEnum::OK : ResponseEnum::INTERNAL_SERVER_ERROR;
+        $statusCode = $response['status'] == 'success' ? ResponseEnum::CREATED : ResponseEnum::INTERNAL_SERVER_ERROR;
         return response()->json($response, $statusCode);
     }
 
@@ -51,23 +45,23 @@ class UserCatalogueController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $userCatalogue = $this->userCatalogueRepository->findById($id);
+        return response()->json([
+            'status' => 'success',
+            'messages' => '',
+            'data' => $userCatalogue ?? []
+        ], ResponseEnum::OK);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateUserCatalogueRequest $request, string $id)
     {
-        //
+        $response = $this->userCatalogueService->update($id);
+        $statusCode = $response['status'] == 'success' ? ResponseEnum::OK : ResponseEnum::INTERNAL_SERVER_ERROR;
+        return response()->json($response, $statusCode);
     }
 
     /**
@@ -75,6 +69,8 @@ class UserCatalogueController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $response = $this->userCatalogueService->destroy($id);
+        $statusCode = $response['status'] == 'success' ? ResponseEnum::OK : ResponseEnum::INTERNAL_SERVER_ERROR;
+        return response()->json($response, $statusCode);
     }
 }

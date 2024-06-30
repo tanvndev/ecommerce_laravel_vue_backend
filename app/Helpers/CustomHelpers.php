@@ -1,5 +1,30 @@
 <?php
 
+if (!function_exists('getServiceInstance')) {
+    function getServiceInstance($modelName)
+    {
+        $folderName = str_replace('Catalogue', "", $modelName);
+        $serviceInterfaceNameSpace = 'App\Services\Interfaces\\' . ucfirst($folderName) . '\\' . ucfirst($modelName)  . 'ServiceInterface';
+        if (interface_exists($serviceInterfaceNameSpace)) {
+            // hàm app() giúp truy cập các đối tượng đã đăng ký trong container
+            return app($serviceInterfaceNameSpace);
+        }
+        return null;
+    }
+}
+if (!function_exists('getRepositoryInstance')) {
+    function getRepositoryInstance($modelName)
+    {
+        $repositoryInterfaceNameSpace = 'App\Repositories\Interfaces\\' . ucfirst($modelName) . 'RepositoryInterface';
+        if (interface_exists($repositoryInterfaceNameSpace)) {
+            // hàm app() giúp truy cập các đối tượng đã đăng ký trong container
+            return app($repositoryInterfaceNameSpace);
+        }
+        return null;
+    }
+}
+
+
 if (!function_exists('formatToCommas')) {
     function formatToCommas($nStr)
     {

@@ -152,14 +152,18 @@ class BaseRepository implements BaseRepositoryInterface
 
     public function delete($modelId)
     {
-        $delete = $this->findById($modelId);
-        return $delete->delete();
+        return $this->model->where('id', $modelId)->delete();
     }
 
     public function deleteByWhere($conditions = [])
     {
         $query = $this->model->newQuery();
         return  $query->customWhere($conditions)->delete();
+    }
+
+    public function deleteByWhereIn($whereInField = '', $whereIn = [])
+    {
+        return $this->model->whereIn($whereInField, $whereIn)->delete();
     }
 
 
@@ -175,7 +179,6 @@ class BaseRepository implements BaseRepositoryInterface
         $query = $this->model->newQuery();
         return  $query->customWhere($conditions)->forceDelete();
     }
-
 
 
 
