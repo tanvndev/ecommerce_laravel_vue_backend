@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
         // User
         // 'App\Services\Interfaces\UserServiceInterface' => 'App\Services\UserService',
         // // UserCatalogue
-        'App\Services\Interfaces\UserCatalogueServiceInterface' => 'App\Services\UserCatalogueService',
+        'App\Services\Interfaces\User\UserCatalogueServiceInterface' => 'App\Services\User\UserCatalogueService',
         // // Post
         // 'App\Services\Interfaces\PostServiceInterface' => 'App\Services\PostService',
         // // PostCatalogue

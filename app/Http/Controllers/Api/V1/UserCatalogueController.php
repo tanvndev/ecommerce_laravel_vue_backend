@@ -6,16 +6,26 @@ use App\Enums\ResponseEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\UserCatalogue\StoreUserCatalogueRequest;
 use App\Http\Requests\V1\UserCatalogue\UpdateUserCatalogueRequest;
+use App\Services\Interfaces\User\UserCatalogueServiceInterface;
+
 use Illuminate\Http\Request;
 
 class UserCatalogueController extends Controller
 {
+    protected $userCatalogueService;
+    public function __construct(
+        UserCatalogueServiceInterface $userCatalogueService
+    ) {
+        $this->userCatalogueService = $userCatalogueService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $response = $this->userCatalogueService->paginate();
+        $statusCode = $response['status'] == 'success' ? ResponseEnum::OK : ResponseEnum::INTERNAL_SERVER_ERROR;
+        return response()->json($response, $statusCode);
     }
 
     /**
@@ -31,12 +41,9 @@ class UserCatalogueController extends Controller
      */
     public function store(StoreUserCatalogueRequest $request)
     {
-        dd($request->all());
-        return response()->json([
-            'status' => ResponseEnum::OK,
-            'messages' => ['Thanh cong'],
-            'data' => []
-        ], ResponseEnum::OK);
+        $response = $this->userCatalogueService->create();
+        $statusCode = $response['status'] == 'success' ? ResponseEnum::OK : ResponseEnum::INTERNAL_SERVER_ERROR;
+        return response()->json($response, $statusCode);
     }
 
     /**

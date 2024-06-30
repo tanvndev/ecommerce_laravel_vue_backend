@@ -14,4 +14,5 @@ enum ResponseEnum
     public const NOT_FOUND = 404;
     public const METHOD_NOT_ALLOWED  = 405;
     public const UNPROCESSABLE_ENTITY  = 422;
+    public const INTERNAL_SERVER_ERROR  = 500;
 }

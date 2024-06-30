@@ -81,7 +81,7 @@ class BaseRepository implements BaseRepositoryInterface
     public function pagination(
         $column = ['*'],
         $condition = [],
-        $perPage = 1,
+        $perPage = 10,
         $orderBy = ['id' => 'DESC'],
         $join = [],
         $relations = [],
@@ -89,7 +89,7 @@ class BaseRepository implements BaseRepositoryInterface
         $rawQuery = [],
     ) {
         $query = $this->model->select($column);
-        $query->keyword($condition['keyword'] ?? null)
+        $query->search($condition['search'] ?? null)
             ->publish($condition['publish'] ?? null)
             ->customWhere($condition['where'] ?? null)
             ->customWhereRaw($rawQuery['whereRaw'] ?? null)
