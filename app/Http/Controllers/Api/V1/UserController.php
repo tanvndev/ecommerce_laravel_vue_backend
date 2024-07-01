@@ -2,33 +2,43 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\ResponseEnum;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\V1\User\StoreUserRequest;
+use App\Http\Requests\V1\User\UpdateUserRequest;
+use App\Http\Resources\User\UserResource;
+use App\Repositories\Interfaces\User\UserRepositoryInterface;
+use App\Services\Interfaces\User\UserServiceInterface;
 
 class UserController extends Controller
 {
+    protected $userService;
+    protected $userRepository;
+    public function __construct(
+        UserServiceInterface $userService,
+        UserRepositoryInterface $userRepository
+    ) {
+        $this->userService = $userService;
+        $this->userRepository = $userRepository;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $response = $this->userService->paginate();
+        $statusCode = $response['status'] == 'success' ? ResponseEnum::OK : ResponseEnum::INTERNAL_SERVER_ERROR;
+        return response()->json($response, $statusCode);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        $response = $this->userService->create();
+        $statusCode = $response['status'] == 'success' ? ResponseEnum::CREATED : ResponseEnum::INTERNAL_SERVER_ERROR;
+        return response()->json($response, $statusCode);
     }
 
     /**
@@ -36,23 +46,23 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = new UserResource($this->userRepository->findById($id));
+        return response()->json([
+            'status' => 'success',
+            'messages' => '',
+            'data' => $user ?? []
+        ], ResponseEnum::OK);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
-        //
+        $response = $this->userService->update($id);
+        $statusCode = $response['status'] == 'success' ? ResponseEnum::OK : ResponseEnum::INTERNAL_SERVER_ERROR;
+        return response()->json($response, $statusCode);
     }
 
     /**
@@ -60,6 +70,8 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $response = $this->userService->destroy($id);
+        $statusCode = $response['status'] == 'success' ? ResponseEnum::OK : ResponseEnum::INTERNAL_SERVER_ERROR;
+        return response()->json($response, $statusCode);
     }
 }

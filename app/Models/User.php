@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Traits\QueryScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +13,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, QueryScopes;
 
     /**
      * The attributes that are mass assignable.
@@ -20,8 +22,20 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'fullname',
+        'user_catalogue_id',
+        'phone',
+        'province_id',
+        'district_id',
+        'ward_id',
+        'address',
+        'birthday',
+        'description',
+        'publish',
+        'ip',
+        'user_agent',
         'email',
         'password',
+        'image',
     ];
 
     /**
@@ -32,22 +46,9 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
-        "id",
-        "email",
-        "phone",
-        "province_id",
-        "district_id",
-        "ward_id",
-        "address",
-        "birthday",
-        "description",
-        "publish",
         "ip",
         "user_agent",
         "email_verified_at",
-        "deleted_at",
-        "created_at",
-        "updated_at",
     ];
 
     /**
@@ -72,5 +73,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function user_catalogues()
+    {
+        return $this->belongsTo(UserCatalogue::class, 'user_catalogue_id', 'id');
     }
 }

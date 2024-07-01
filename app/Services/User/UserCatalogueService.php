@@ -2,6 +2,7 @@
 // Trong Laravel, Service Pattern thường được sử dụng để tạo các lớp service, giúp tách biệt logic của ứng dụng khỏi controller.
 namespace App\Services\User;
 
+
 use App\Repositories\Interfaces\User\UserCatalogueRepositoryInterface;
 use App\Repositories\Interfaces\User\UserRepositoryInterface;
 use App\Services\BaseService;
@@ -19,7 +20,6 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
     }
     public function paginate()
     {
-        // dd(request()->all());
         // addslashes là một hàm được sử dụng để thêm các ký tự backslashes (\) vào trước các ký tự đặc biệt trong chuỗi.
         $condition['search'] = addslashes(request('search'));
         $condition['publish'] = request('publish');
@@ -27,8 +27,13 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         $userCatalogues = $this->userCatalogueRepository->pagination(
             ['id', 'name', 'description', 'publish'],
             $condition,
-            request('pageSize')
+            request('pageSize'),
+            ['id' => 'desc'],
+            [],
+            ['users']
         );
+
+
 
         foreach ($userCatalogues as $key => $userCatalogue) {
             $userCatalogue->key = $userCatalogue->id;

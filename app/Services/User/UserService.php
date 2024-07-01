@@ -1,62 +1,66 @@
 <?php
 // Trong Laravel, Service Pattern thường được sử dụng để tạo các lớp service, giúp tách biệt logic của ứng dụng khỏi controller.
-namespace App\Services;
+namespace App\Services\User;
 
+
+use App\Repositories\Interfaces\User\UserRepositoryInterface;
+use App\Services\BaseService;
 use App\Services\Interfaces\User\UserServiceInterface;
-use App\Repositories\Interfaces\UserRepositoryInterface as UserRepository;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class UserService extends BaseService implements UserServiceInterface
 {
     protected $userRepository;
-    public function __construct(UserRepository $userRepository)
-    {
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+    ) {
         $this->userRepository = $userRepository;
     }
-    function paginate()
+    public function paginate()
     {
         // addslashes là một hàm được sử dụng để thêm các ký tự backslashes (\) vào trước các ký tự đặc biệt trong chuỗi.
-        $condition['keyword'] = addslashes(request('keyword'));
+        $condition['search'] = addslashes(request('search'));
+        $condition['searchFields'] = ['fullname', 'email', 'phone', 'address'];
         $condition['publish'] = request('publish');
-        $condition['user_catalogue_id'] = request('user_catalogue_id');
-
-
 
         $users = $this->userRepository->pagination(
-            ['id', 'email', 'phone', 'fullname', 'address', 'publish', 'user_catalogue_id', 'image'],
+            ['id', 'fullname', 'email', 'phone', 'address', 'publish'],
             $condition,
-            request('perpage'),
-            [],
-            [],
-            ['user_catalogues']
+            request('pageSize'),
+            ['id' => 'desc'],
         );
 
-        // dd($users);
+        foreach ($users as $key => $userCatalogue) {
+            $userCatalogue->key = $userCatalogue->id;
+        }
 
-        return $users;
+        return [
+            'status' => 'success',
+            'messages' => '',
+            'data' => $users
+        ];
     }
 
-    function create()
+    public function create()
     {
         DB::beginTransaction();
         try {
-            // Lấy ra tất cả các trường và loại bỏ 2 trường bên dưới
-            $payload = request()->except('_token', 're_password');
-            // Hash mật khẩu 
-            $payload['password'] = Hash::make($payload['password']);
-            $create =  $this->userRepository->create($payload);
-
-            if (!$create) {
-                DB::rollBack();
-                return false;
-            }
+            // Lấy ra tất cả các trường và loại bỏ trường bên dưới
+            $payload = request()->except('_token');
+            $this->userRepository->create($payload);
             DB::commit();
-            return true;
+            return [
+                'status' => 'success',
+                'messages' => 'Thêm mới thành công.',
+                'data' => null
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
-            return false;
+            return [
+                'status' => 'error',
+                'messages' => 'Thêm mới thất bại.',
+                'data' => null
+            ];
         }
     }
 
@@ -66,18 +70,21 @@ class UserService extends BaseService implements UserServiceInterface
         try {
             // Lấy ra tất cả các trường và loại bỏ 2 trường bên dưới
             $payload = request()->except('_token', '_method');
-            $update =  $this->userRepository->update($id, $payload);
+            $this->userRepository->update($id, $payload);
 
-            if (!$update) {
-                DB::rollBack();
-                return false;
-            }
             DB::commit();
-            return true;
+            return [
+                'status' => 'success',
+                'messages' => 'Cập nhập thành công.',
+                'data' => null
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
-            return false;
+            return [
+                'status' => 'error',
+                'messages' => 'Cập nhập thất bại.',
+                'data' => null
+            ];
         }
     }
 
@@ -86,18 +93,20 @@ class UserService extends BaseService implements UserServiceInterface
         DB::beginTransaction();
         try {
             // Xoá mềm
-            $delete =  $this->userRepository->delete($id);
-
-            if (!$delete) {
-                DB::rollBack();
-                return false;
-            }
+            $this->userRepository->delete($id);
             DB::commit();
-            return true;
+            return [
+                'status' => 'success',
+                'messages' => 'Xóa thành công.',
+                'data' => null
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
-            return false;
+            return [
+                'status' => 'error',
+                'messages' => 'Xóa thất bại.',
+                'data' => null
+            ];
         }
     }
 }

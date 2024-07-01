@@ -36,14 +36,9 @@ Route::group(['middleware' => 'jwt.verify'], function () {
         Route::delete('deleteMultiple', [DashboardController::class, 'deleteMultiple'])->name('deleteMultiple');
     });
 
-    // // Routes for user
-    // Route::apiResource('/v1/user', UserController::class);
 
-    // // Routes for user catalogue
-    // Route::apiResource('/v1/user/catalogue', UserCatalogueController::class);
-
-    Route::prefix('v1/user')->group(function () {
+    Route::prefix('v1/users')->group(function () {
         Route::apiResource('/', UserController::class);
-        Route::apiResource('catalogue', UserCatalogueController::class);
+        Route::apiResource('catalogues', UserCatalogueController::class);
     });
 });

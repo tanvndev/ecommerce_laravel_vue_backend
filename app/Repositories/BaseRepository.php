@@ -89,7 +89,7 @@ class BaseRepository implements BaseRepositoryInterface
         $rawQuery = [],
     ) {
         $query = $this->model->select($column);
-        $query->search($condition['search'] ?? null)
+        $query->search($condition['search'] ?? null, $condition['searchFields'] ?? null)
             ->publish($condition['publish'] ?? null)
             ->customWhere($condition['where'] ?? null)
             ->customWhereRaw($rawQuery['whereRaw'] ?? null)

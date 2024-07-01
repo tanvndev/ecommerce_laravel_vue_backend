@@ -16,4 +16,9 @@ class UserCatalogue extends Model
         'description',
         'publish',
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'user_catalogue_id', 'id');
+    }
 }

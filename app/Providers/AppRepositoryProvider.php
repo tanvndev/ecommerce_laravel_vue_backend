@@ -14,7 +14,7 @@ class AppRepositoryProvider extends ServiceProvider
         // Base
         'App\Repositories\Interfaces\BaseRepositoryInterface' => 'App\Repositories\BaseRepository',
         // User
-        // 'App\Repositories\Interfaces\UserRepositoryInterface' => 'App\Repositories\UserRepository',
+        'App\Repositories\Interfaces\User\UserRepositoryInterface' => 'App\Repositories\User\UserRepository',
         // UserCatalogue
         'App\Repositories\Interfaces\User\UserCatalogueRepositoryInterface' => 'App\Repositories\User\UserCatalogueRepository',
         // // Post
