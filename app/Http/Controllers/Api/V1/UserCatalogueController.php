@@ -67,6 +67,13 @@ class UserCatalogueController extends Controller
         return response()->json($response, $statusCode);
     }
 
+    public function hanleUpdate(UpdateUserCatalogueRequest $request, string $id)
+    {
+        $response = $this->userCatalogueService->update($id);
+        $statusCode = $response['status'] == 'success' ? ResponseEnum::OK : ResponseEnum::INTERNAL_SERVER_ERROR;
+        return response()->json($response, $statusCode);
+    }
+
     /**
      * Remove the specified resource from storage.
      */
