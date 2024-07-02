@@ -1,6 +1,10 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use League\Glide\Responses\LaravelResponseFactory;
+use League\Glide\ServerFactory;
+use League\Glide\Server;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('images/{path}', function (Server $server, Request $request, $path) {
+    $server->outputImage($path, $request->all());
+})->where('path', '.*')->name('glide');

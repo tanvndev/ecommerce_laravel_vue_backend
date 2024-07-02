@@ -7,6 +7,7 @@ use App\Repositories\Interfaces\User\UserRepositoryInterface;
 use App\Services\BaseService;
 use App\Services\Interfaces\User\UserServiceInterface;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserService extends BaseService implements UserServiceInterface
 {
@@ -47,16 +48,23 @@ class UserService extends BaseService implements UserServiceInterface
         try {
             // Lấy ra tất cả các trường và loại bỏ trường bên dưới
             $payload = request()->except('_token');
-            $urlImage = Upload::uploadImage($payload['image']);
-            dd($urlImage);
+            $payload['password'] = Hash::make($payload['password']);
+            $payload['user_agent'] = request()->header('User-Agent');
+            $payload['ip'] = request()->ip();
 
-            // $this->userRepository->create($payload);
-            // DB::commit();
-            // return [
-            //     'status' => 'success',
-            //     'messages' => 'Thêm mới thành công.',
-            //     'data' => null
-            // ];
+            // Xu ly anh resize
+            if (isset($payload['image']) && !empty($payload['image'])) {
+                $urlImage = Upload::uploadImage($payload['image']);
+                $payload['image'] = $urlImage;
+            }
+
+            $this->userRepository->create($payload);
+            DB::commit();
+            return [
+                'status' => 'success',
+                'messages' => 'Thêm mới thành công.',
+                'data' => null
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
             return [
@@ -67,7 +75,7 @@ class UserService extends BaseService implements UserServiceInterface
         }
     }
 
-    function update($id)
+    public function update($id)
     {
         DB::beginTransaction();
         try {
@@ -91,7 +99,7 @@ class UserService extends BaseService implements UserServiceInterface
         }
     }
 
-    function destroy($id)
+    public function destroy($id)
     {
         DB::beginTransaction();
         try {

@@ -11,7 +11,6 @@ use App\Http\Requests\V1\User\{
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Interfaces\User\UserRepositoryInterface;
 use App\Services\Interfaces\User\UserServiceInterface;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -37,7 +36,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
         $response = $this->userService->create();
         $statusCode = $response['status'] == 'success' ? ResponseEnum::CREATED : ResponseEnum::INTERNAL_SERVER_ERROR;

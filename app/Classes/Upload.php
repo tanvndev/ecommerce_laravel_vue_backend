@@ -9,15 +9,15 @@ class Upload
 {
     public static function uploadImage($image)
     {
+        $imageSrc = env('IMAGE_SOURCE_PATH');
         if ($image !== null) {
-            $path = 'uploads/photos/' . date('Y') . '/' . date('m') . '/';
+            $path = $imageSrc . date('Y') . '/' . date('m');
             $filename = uniqid() . '.' . $image->getClientOriginalExtension();
 
-            // Store the image in the def  $storedPath = $file->storeAs($path, $name, 'public');
-            $storedPath = $image->storeAs($path, $filename, 'public');
-            $url = Storage::url($storedPath);
-
-            return asset($url);
+            $storedPath = $image->storeAs($path, $filename);
+            // Loai bo public/uploads/photos phu hop voi appServiceProvider
+            $newPath = Str::replaceFirst($imageSrc, 'images/', $storedPath);
+            return asset($newPath);
         }
         return null;
     }

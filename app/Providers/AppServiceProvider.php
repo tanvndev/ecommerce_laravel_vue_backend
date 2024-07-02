@@ -2,12 +2,10 @@
 
 namespace App\Providers;
 
-use App\Http\ViewComposers\{
-    MenuComposer,
-    SystemComposer
-};
-
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use League\Glide\ServerFactory;
+use League\Glide\Responses\LaravelResponseFactory;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -68,12 +66,23 @@ class AppServiceProvider extends ServiceProvider
     ];
     public function register(): void
     {
-        // 
         foreach ($this->serviceBindings as $key => $value) {
             $this->app->bind($key, $value);
         }
 
         $this->app->register(AppRepositoryProvider::class);
+
+        // Register Glide server
+        $this->app->singleton('League\Glide\Server', function ($app) {
+            $fileSystem = $app->make(Filesystem::class);
+            return ServerFactory::create([
+                'response' => new LaravelResponseFactory(app('request')),
+                'source' => $fileSystem->getDriver(),
+                'cache' =>  $fileSystem->getDriver(),
+                'source_path_prefix' => env('IMAGE_SOURCE_PATH'),
+                'cache_path_prefix' => '.cache',
+            ]);
+        });
     }
 
     /**
@@ -81,9 +90,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
-        // foreach ($composerClass as $value) {
-        //     view()->composer('clients.*', $value);
-        // }
     }
 }

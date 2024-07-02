@@ -71,7 +71,7 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         }
     }
 
-    function update($id)
+    public function update($id)
     {
         DB::beginTransaction();
         try {
@@ -95,7 +95,7 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         }
     }
 
-    function destroy($id)
+    public function destroy($id)
     {
         DB::beginTransaction();
         try {

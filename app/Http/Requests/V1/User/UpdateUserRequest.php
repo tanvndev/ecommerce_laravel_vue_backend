@@ -29,6 +29,7 @@ class UpdateUserRequest extends FormRequest
             'phone' => 'required|unique:users,phone,' . $this->id,
             'fullname' => 'required|string',
             'user_catalogue_id' => 'required|integer|gt:0',
+            'image' => 'image|mimes:jpeg,png,jpg,webp,svg|max:4096|dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000',
         ];
     }
 
@@ -39,6 +40,7 @@ class UpdateUserRequest extends FormRequest
             'fullname' => 'Họ tên thành viên',
             'phone' => 'Số điện thoại',
             'user_catalogue_id' => 'Nhóm thành viên',
+            'image' => 'Ảnh đại diện',
         ];
     }
 
