@@ -20,32 +20,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// AUTH ROUTE
-Route::prefix('v1/auth')->group(function () {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('refreshToken', [AuthController::class, 'refreshToken']);
-    Route::post('logout', [AuthController::class, 'logout']);
-});
+Route::prefix('v1')->group(function () {
 
-// LOCATION ROUTE
-Route::prefix('v1/location')->group(function () {
-    Route::get('provinces', [LocationController::class, 'getProvinces']);
-    Route::get('getLocation', [LocationController::class, 'getLocation']);
-});
-
-
-Route::group(['middleware' => 'jwt.verify'], function () {
-
-    // Routes for dashboard
-    Route::prefix('v1/dashboard')->name('dashboard.')->group(function () {
-        Route::put('changeStatus', [DashboardController::class, 'changeStatus'])->name('changeStatus');
-        Route::put('changeStatusMultiple', [DashboardController::class, 'changeStatusMultiple'])->name('changeStatusMultiple');
-        Route::delete('deleteMultiple', [DashboardController::class, 'deleteMultiple'])->name('deleteMultiple');
+    // AUTH ROUTE
+    Route::prefix('auth')->group(function () {
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('refreshToken', [AuthController::class, 'refreshToken']);
+        Route::post('logout', [AuthController::class, 'logout']);
     });
 
+    // LOCATION ROUTE
+    Route::prefix('location')->group(function () {
+        Route::get('provinces', [LocationController::class, 'getProvinces']);
+        Route::get('getLocation', [LocationController::class, 'getLocation']);
+    });
 
-    Route::prefix('v1/users')->group(function () {
-        Route::apiResource('/', UserController::class);
-        Route::apiResource('catalogues', UserCatalogueController::class);
+    // Routes with JWT Middleware
+    Route::group(['middleware' => 'jwt.verify'], function () {
+
+        // DASHBOARD ROUTE
+        Route::prefix('dashboard')->name('dashboard.')->group(function () {
+            Route::put('changeStatus', [DashboardController::class, 'changeStatus'])->name('changeStatus');
+            Route::put('changeStatusMultiple', [DashboardController::class, 'changeStatusMultiple'])->name('changeStatusMultiple');
+            Route::delete('deleteMultiple', [DashboardController::class, 'deleteMultiple'])->name('deleteMultiple');
+        });
+
+        // USER ROUTE
+        Route::apiResource('users/catalogues', UserCatalogueController::class);
+        Route::apiResource('users', UserController::class);
     });
 });

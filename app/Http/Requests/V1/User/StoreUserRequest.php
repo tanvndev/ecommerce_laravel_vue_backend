@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests\V1\User;
 
-use App\Enums\ResponseEnum;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+
+use App\Enums\ResponseEnum;
 
 class StoreUserRequest extends FormRequest
 {
@@ -25,16 +26,22 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'description' => 'required',
+            'email' => 'required|string|email|unique:users',
+            'phone' => 'required|unique:users',
+            'fullname' => 'required|string',
+            'user_catalogue_id' => 'required|integer|gt:0',
+            'password' => 'required|string|min:6',
         ];
     }
 
     public function attributes()
     {
         return [
-            'name' => 'Tên nhóm thành viên',
-            'description' => 'Mô tả nhóm thành viên',
+            'email' => 'Email',
+            'fullname' => 'Họ tên thành viên',
+            'phone' => 'Số điện thoại',
+            'user_catalogue_id' => 'Nhóm thành viên',
+            'password' => 'Mật khẩu',
         ];
     }
 
@@ -46,9 +53,7 @@ class StoreUserRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'status' => ResponseEnum::BAD_REQUEST,
             'messages' => $validator->errors(),
-            'data' => []
-        ], 400));
+        ], 422));
     }
 }

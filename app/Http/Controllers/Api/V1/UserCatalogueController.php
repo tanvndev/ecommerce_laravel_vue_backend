@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\ResponseEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\UserCatalogue\StoreUserCatalogueRequest;
-use App\Http\Requests\V1\UserCatalogue\UpdateUserCatalogueRequest;
+use App\Http\Requests\V1\User\{
+    StoreUserCatalogueRequest,
+    UpdateUserCatalogueRequest
+};
 use App\Http\Resources\User\UserCatalogueResource;
 use App\Repositories\Interfaces\User\UserCatalogueRepositoryInterface;
 use App\Services\Interfaces\User\UserCatalogueServiceInterface;
@@ -45,9 +47,7 @@ class UserCatalogueController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-
     {
-
         $userCatalogue = new UserCatalogueResource($this->userCatalogueRepository->findById($id));
         return response()->json([
             'status' => 'success',

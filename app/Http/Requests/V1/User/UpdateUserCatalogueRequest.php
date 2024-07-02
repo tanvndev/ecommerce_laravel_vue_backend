@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\V1\UserCatalogue;
+namespace App\Http\Requests\V1\User;
 
 use App\Enums\ResponseEnum;
 use Illuminate\Contracts\Validation\Validator;
@@ -46,9 +46,7 @@ class UpdateUserCatalogueRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'status' => ResponseEnum::BAD_REQUEST,
             'messages' => $validator->errors(),
-            'data' => []
-        ], 400));
+        ], 422));
     }
 }

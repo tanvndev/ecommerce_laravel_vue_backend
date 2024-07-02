@@ -25,16 +25,20 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'description' => 'required',
+            'email' => 'required|string|email|unique:users,email,' . $this->id,
+            'phone' => 'required|unique:users,phone,' . $this->id,
+            'fullname' => 'required|string',
+            'user_catalogue_id' => 'required|integer|gt:0',
         ];
     }
 
     public function attributes()
     {
         return [
-            'name' => 'Tên nhóm thành viên',
-            'description' => 'Mô tả nhóm thành viên',
+            'email' => 'Email',
+            'fullname' => 'Họ tên thành viên',
+            'phone' => 'Số điện thoại',
+            'user_catalogue_id' => 'Nhóm thành viên',
         ];
     }
 
@@ -46,9 +50,7 @@ class UpdateUserRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'status' => ResponseEnum::BAD_REQUEST,
             'messages' => $validator->errors(),
-            'data' => []
-        ], 400));
+        ], 422));
     }
 }

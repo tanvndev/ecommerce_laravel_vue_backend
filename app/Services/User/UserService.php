@@ -2,7 +2,7 @@
 // Trong Laravel, Service Pattern thường được sử dụng để tạo các lớp service, giúp tách biệt logic của ứng dụng khỏi controller.
 namespace App\Services\User;
 
-
+use App\Classes\Upload;
 use App\Repositories\Interfaces\User\UserRepositoryInterface;
 use App\Services\BaseService;
 use App\Services\Interfaces\User\UserServiceInterface;
@@ -47,13 +47,16 @@ class UserService extends BaseService implements UserServiceInterface
         try {
             // Lấy ra tất cả các trường và loại bỏ trường bên dưới
             $payload = request()->except('_token');
-            $this->userRepository->create($payload);
-            DB::commit();
-            return [
-                'status' => 'success',
-                'messages' => 'Thêm mới thành công.',
-                'data' => null
-            ];
+            $urlImage = Upload::uploadImage($payload['image']);
+            dd($urlImage);
+
+            // $this->userRepository->create($payload);
+            // DB::commit();
+            // return [
+            //     'status' => 'success',
+            //     'messages' => 'Thêm mới thành công.',
+            //     'data' => null
+            // ];
         } catch (\Exception $e) {
             DB::rollBack();
             return [
