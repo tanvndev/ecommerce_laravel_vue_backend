@@ -27,10 +27,10 @@ class AppRepositoryProvider extends ServiceProvider
         // 'App\Repositories\Interfaces\GenerateRepositoryInterface' => 'App\Repositories\GenerateRepository',
         // // Permission
         // 'App\Repositories\Interfaces\PermissionRepositoryInterface' => 'App\Repositories\PermissionRepository',
-        // // Province
-        // 'App\Repositories\Interfaces\ProvinceRepositoryInterface' => 'App\Repositories\ProvinceRepository',
-        // // District
-        // 'App\Repositories\Interfaces\DistrictRepositoryInterface' => 'App\Repositories\DistrictRepository',
+        // Province
+        'App\Repositories\Interfaces\Location\ProvinceRepositoryInterface' => 'App\Repositories\Location\ProvinceRepository',
+        // District
+        'App\Repositories\Interfaces\Location\DistrictRepositoryInterface' => 'App\Repositories\Location\DistrictRepository',
         // // Router
         // 'App\Repositories\Interfaces\RouterRepositoryInterface' => 'App\Repositories\RouterRepository',
         // // ProductCatalogue

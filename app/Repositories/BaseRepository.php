@@ -18,7 +18,7 @@ class BaseRepository implements BaseRepositoryInterface
         $this->model = $model;
     }
 
-    public function all($relation = [], $column = ['*'], $orderBy = null)
+    public function all($column = ['*'], $relation = [],  $orderBy = null)
     {
         $query = $this->model->select($column);
 

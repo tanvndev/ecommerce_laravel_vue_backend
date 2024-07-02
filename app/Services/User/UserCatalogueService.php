@@ -23,26 +23,28 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         // addslashes là một hàm được sử dụng để thêm các ký tự backslashes (\) vào trước các ký tự đặc biệt trong chuỗi.
         $condition['search'] = addslashes(request('search'));
         $condition['publish'] = request('publish');
+        $select = ['id', 'name', 'description', 'publish'];
 
-        $userCatalogues = $this->userCatalogueRepository->pagination(
-            ['id', 'name', 'description', 'publish'],
-            $condition,
-            request('pageSize'),
-            ['id' => 'desc'],
-            [],
-            ['users']
-        );
-
-
-
-        foreach ($userCatalogues as $key => $userCatalogue) {
-            $userCatalogue->key = $userCatalogue->id;
+        if (request('pageSize') && request('page')) {
+            $userCatalogues = $this->userCatalogueRepository->pagination(
+                ['id', 'name', 'description', 'publish'],
+                $condition,
+                request('pageSize'),
+                ['id' => 'desc'],
+                [],
+                ['users']
+            );
+            foreach ($userCatalogues as $key => $userCatalogue) {
+                $userCatalogue->key = $userCatalogue->id;
+            }
+        } else {
+            $userCatalogues = $this->userCatalogueRepository->all($select);
         }
 
         return [
             'status' => 'success',
             'messages' => '',
-            'data' => $userCatalogues
+            'data' => $userCatalogues ?? []
         ];
     }
 
