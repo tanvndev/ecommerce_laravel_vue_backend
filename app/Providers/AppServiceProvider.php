@@ -21,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
         'App\Services\Interfaces\User\UserServiceInterface' => 'App\Services\User\UserService',
         // UserCatalogue
         'App\Services\Interfaces\User\UserCatalogueServiceInterface' => 'App\Services\User\UserCatalogueService',
+        // Upload
+        'App\Services\Interfaces\Upload\UploadServiceInterface' => 'App\Services\Upload\UploadService',
         // // Post
         // 'App\Services\Interfaces\PostServiceInterface' => 'App\Services\PostService',
         // // PostCatalogue

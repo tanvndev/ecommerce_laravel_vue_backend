@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\{
     AuthController,
     DashboardController,
     LocationController,
+    UploadController,
     UserCatalogueController,
     UserController
 };
@@ -35,6 +36,8 @@ Route::prefix('v1')->group(function () {
         Route::get('getLocation', [LocationController::class, 'getLocation']);
     });
 
+
+
     // Routes with JWT Middleware
     Route::group(['middleware' => 'jwt.verify'], function () {
 
@@ -48,5 +51,8 @@ Route::prefix('v1')->group(function () {
         // USER ROUTE
         Route::apiResource('users/catalogues', UserCatalogueController::class);
         Route::apiResource('users', UserController::class);
+
+        // Upload ROUTE
+        Route::apiResource('uploads', UploadController::class);
     });
 });
