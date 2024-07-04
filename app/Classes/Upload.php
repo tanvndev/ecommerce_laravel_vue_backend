@@ -7,10 +7,12 @@ use Intervention\Image\Facades\Image;
 use Spatie\ImageOptimizer\OptimizerChainFactory;
 use Illuminate\Support\Str;
 
+
 class Upload
 {
     public static function uploadImage($image)
     {
+        // dd($image);
         $imageSrc = env('IMAGE_SOURCE_PATH');
         $fileList = ['jpg', 'jpeg', 'png', 'webp', 'svg', 'gif', 'tiff', 'heic', 'raw'];
         try {
@@ -25,6 +27,7 @@ class Upload
                         'message' => 'Dung lượng tệp ---> ' . $originalName . ' <--- không được vượt quá 5MB.'
                     ];
                 }
+                // dd($image);
 
                 $uuid = uniqid();
                 $path = $imageSrc . date('Y') . '/' . date('m');
@@ -34,6 +37,7 @@ class Upload
                 if (!Storage::exists($path)) {
                     Storage::makeDirectory($path);
                 }
+                // dd($path . '/' . $filename);
 
                 // Optimize and convert the image to .webp
                 $img = Image::make($image)
@@ -64,9 +68,11 @@ class Upload
                 ];
             }
         } catch (\Exception $e) {
+            echo $e->getMessage();
+            die;
             return [
                 'status' => 'error',
-                'message' => 'Có lỗi từ server vui lòng thử lại.'
+                'message' => 'Có lỗi từ tệp ---> ' . $originalName . ' <--- vui lòng thử tải lại.'
             ];
         }
     }

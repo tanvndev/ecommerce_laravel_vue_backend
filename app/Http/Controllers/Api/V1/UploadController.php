@@ -35,9 +35,9 @@ class UploadController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $link)
+    public function destroy(string $id)
     {
-        $response = $this->uploadService->destroy($link);
+        $response = $this->uploadService->destroy($id);
         $statusCode = $response['status'] == 'success' ? ResponseEnum::CREATED : ResponseEnum::INTERNAL_SERVER_ERROR;
         return response()->json($response, $statusCode);
     }

@@ -15,7 +15,7 @@ class UploadService extends BaseService implements UploadServiceInterface
     public function paginate()
     {
         $page = request('page', 1);
-        $pageSize = request('pageSize', 2);
+        $pageSize = request('pageSize', 30);
         $images = $this->getAllImages();
 
         if (empty($images)) {
@@ -33,7 +33,11 @@ class UploadService extends BaseService implements UploadServiceInterface
             ['path' => request()->url()]   // Các tham số yêu cầu bổ sung cho URL phân trang
         );
 
-        return $paginator;
+        return [
+            'status' => 'success',
+            'messages' => '',
+            'data' => $paginator ?? []
+        ];
     }
 
     private function getAllImages()
@@ -100,7 +104,7 @@ class UploadService extends BaseService implements UploadServiceInterface
             return [
                 'status' => 'success',
                 'messages' => $messages ?? [],
-                'data' => $data
+                'data' => $data['data']
             ];
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -112,12 +116,14 @@ class UploadService extends BaseService implements UploadServiceInterface
             ];
         }
     }
-    public function destroy($link)
+    public function destroy($id)
     {
         try {
-
-            $filePath = parse_url($link, PHP_URL_PATH);
+            $url = request('url');
+            $filePath = parse_url($url, PHP_URL_PATH);
+            $filePath = str_replace('storage', 'public', $filePath);
             $filePath = ltrim($filePath, '/');
+
             if (Storage::exists($filePath)) {
                 Storage::delete($filePath);
             }
@@ -125,7 +131,7 @@ class UploadService extends BaseService implements UploadServiceInterface
             return [
                 'status' => 'success',
                 'messages' => 'Tệp đã được xóa thành công.',
-                'data' => $data
+                'data' => $data['data']
             ];
         } catch (\Exception $e) {
             return [
