@@ -36,7 +36,6 @@ class BaseService implements BaseServiceInterface
         return $payload;
     }
 
-
     public function updateStatus()
     {
         DB::beginTransaction();

@@ -31,7 +31,7 @@ class StoreUserRequest extends FormRequest
             'fullname' => 'required|string',
             'user_catalogue_id' => 'required|integer|gt:0',
             'password' => 'required|string|min:6',
-            'image' => 'image|mimes:jpeg,png,jpg,webp,svg|max:4096|dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000',
+
         ];
     }
 
@@ -43,7 +43,7 @@ class StoreUserRequest extends FormRequest
             'phone' => 'Số điện thoại',
             'user_catalogue_id' => 'Nhóm thành viên',
             'password' => 'Mật khẩu',
-            'image' => 'Ảnh đại diện',
+
         ];
     }
 
