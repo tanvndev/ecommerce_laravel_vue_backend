@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\V1\User;
+namespace App\Http\Requests\Product;
 
 use App\Enums\ResponseEnum;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreUserCatalogueRequest extends FormRequest
+class UpdateProductCatalogueRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -47,6 +47,6 @@ class StoreUserCatalogueRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json([
             'messages' => $validator->errors(),
-        ], 422));
+        ], ResponseEnum::UNPROCESSABLE_ENTITY));
     }
 }

@@ -19,6 +19,14 @@ class BaseService implements BaseServiceInterface
     }
 
 
+    protected  function convertToCode($str)
+    {
+        $newStr = Str::slug($str);
+        $newStr = strtoupper(str_replace('-', '', $newStr));
+        $newStr .= rand(0, 1000);
+        return $newStr;
+    }
+
     protected function calculateNestedSet()
     {
         $this->nestedset->Get('level ASC, order ASC');

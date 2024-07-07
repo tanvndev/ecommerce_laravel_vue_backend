@@ -1,50 +1,49 @@
 <?php
 // Trong Laravel, Service Pattern thường được sử dụng để tạo các lớp service, giúp tách biệt logic của ứng dụng khỏi controller.
-namespace App\Services\User;
+namespace App\Services\Product;
 
 
-use App\Repositories\Interfaces\User\UserCatalogueRepositoryInterface;
-use App\Repositories\Interfaces\User\UserRepositoryInterface;
+use App\Repositories\Interfaces\Product\ProductCatalogueRepositoryInterface;
 use App\Services\BaseService;
-use App\Services\Interfaces\User\UserCatalogueServiceInterface;
+use App\Services\Interfaces\Product\ProductCatalogueServiceInterface;
 use Illuminate\Support\Facades\DB;
 
-class UserCatalogueService extends BaseService implements UserCatalogueServiceInterface
+class ProductCatalogueService extends BaseService implements ProductCatalogueServiceInterface
 {
-    protected $userCatalogueRepository;
-    protected $userRepository;
+    protected $productCatalogueRepository;
+    protected $productRepository;
     public function __construct(
-        UserCatalogueRepositoryInterface $userCatalogueRepository,
+        ProductCatalogueRepositoryInterface $productCatalogueRepository,
     ) {
-        $this->userCatalogueRepository = $userCatalogueRepository;
+        $this->productCatalogueRepository = $productCatalogueRepository;
     }
     public function paginate()
     {
         // addslashes là một hàm được sử dụng để thêm các ký tự backslashes (\) vào trước các ký tự đặc biệt trong chuỗi.
         $condition['search'] = addslashes(request('search'));
         $condition['publish'] = request('publish');
-        $select = ['id', 'name', 'description', 'publish'];
+        $select = ['id', 'name', 'code', 'publish'];
 
         if (request('pageSize') && request('page')) {
-            $userCatalogues = $this->userCatalogueRepository->pagination(
+            $productCatalogues = $this->productCatalogueRepository->pagination(
                 $select,
                 $condition,
                 request('pageSize'),
                 ['id' => 'desc'],
                 [],
-                ['users']
+                []
             );
-            foreach ($userCatalogues as $key => $userCatalogue) {
-                $userCatalogue->key = $userCatalogue->id;
+            foreach ($productCatalogues as $key => $productCatalogue) {
+                $productCatalogue->key = $productCatalogue->id;
             }
         } else {
-            $userCatalogues = $this->userCatalogueRepository->all($select);
+            $productCatalogues = $this->productCatalogueRepository->all($select);
         }
 
         return [
             'status' => 'success',
             'messages' => '',
-            'data' => $userCatalogues ?? []
+            'data' => $productCatalogues ?? []
         ];
     }
 
@@ -54,7 +53,10 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         try {
             // Lấy ra tất cả các trường và loại bỏ trường bên dưới
             $payload = request()->except('_token');
-            $this->userCatalogueRepository->create($payload);
+            if (!isset($payload['code']) || empty($payload['code'])) {
+                $payload['code'] = $this->convertToCode($payload['name']);
+            }
+            $this->productCatalogueRepository->create($payload);
             DB::commit();
             return [
                 'status' => 'success',
@@ -71,13 +73,20 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         }
     }
 
+
+
     public function update($id)
     {
         DB::beginTransaction();
         try {
             // Lấy ra tất cả các trường và loại bỏ 2 trường bên dưới
             $payload = request()->except('_token', '_method');
-            $this->userCatalogueRepository->update($id, $payload);
+            if (!isset($payload['code']) || empty($payload['code'])) {
+                $payload['code'] = $this->convertToCode($payload['name']);
+            } else {
+                $payload['code'] = strtoupper($payload['code']);
+            }
+            $this->productCatalogueRepository->update($id, $payload);
 
             DB::commit();
             return [
@@ -100,7 +109,7 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         DB::beginTransaction();
         try {
             // Xoá mềm
-            $this->userCatalogueRepository->delete($id);
+            $this->productCatalogueRepository->delete($id);
             DB::commit();
             return [
                 'status' => 'success',
@@ -124,8 +133,8 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         try {
             $permissions = request('permission');
             foreach ($permissions as $key => $value) {
-                $userCatalogue = $this->userCatalogueRepository->findById($key);
-                $userCatalogue->permissions()->sync($value);
+                $productCatalogue = $this->productCatalogueRepository->findById($key);
+                $productCatalogue->permissions()->sync($value);
             }
             DB::commit();
             return true;
@@ -136,8 +145,8 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         }
     }
 
-    // Hàm này thay đổi trạng thái của user khi thay đổi trạng thái user catalogue
-    private function changeUserStatus($dataPost)
+    // Hàm này thay đổi trạng thái của product khi thay đổi trạng thái product catalogue
+    private function changeProductStatus($dataPost)
     {
         DB::beginTransaction();
         try {
@@ -154,7 +163,7 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
             }
             $payload[$dataPost['field']] = $value;
 
-            $update = $this->userRepository->updateByWhereIn('user_catalogue_id', $arrayId, $payload);
+            $update = $this->productRepository->updateByWhereIn('product_catalogue_id', $arrayId, $payload);
 
             if (!$update) {
                 DB::rollBack();

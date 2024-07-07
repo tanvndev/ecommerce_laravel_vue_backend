@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1\User;
 
 use App\Enums\ResponseEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\User\{
+use App\Http\Requests\User\{
     StoreUserRequest,
     UpdateUserRequest
 };

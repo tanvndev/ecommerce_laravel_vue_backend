@@ -5,9 +5,9 @@ use App\Http\Controllers\Api\V1\{
     DashboardController,
     LocationController,
     UploadController,
-    UserCatalogueController,
-    UserController
 };
+use App\Http\Controllers\Api\V1\User\{UserCatalogueController, UserController};
+use App\Http\Controllers\Api\V1\Product\{ProductCatalogueController, ProductController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,6 +51,10 @@ Route::prefix('v1')->group(function () {
         // USER ROUTE
         Route::apiResource('users/catalogues', UserCatalogueController::class);
         Route::apiResource('users', UserController::class);
+
+        // PRODUCT ROUTE
+        Route::apiResource('products/catalogues', ProductCatalogueController::class);
+        Route::apiResource('products', ProductController::class);
 
         // Upload ROUTE
         Route::apiResource('uploads', UploadController::class);

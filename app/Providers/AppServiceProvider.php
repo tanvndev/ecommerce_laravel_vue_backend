@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
         'App\Services\Interfaces\User\UserCatalogueServiceInterface' => 'App\Services\User\UserCatalogueService',
         // Upload
         'App\Services\Interfaces\Upload\UploadServiceInterface' => 'App\Services\Upload\UploadService',
+        // ProductCatalogue
+        'App\Services\Interfaces\Product\ProductCatalogueServiceInterface' => 'App\Services\Product\ProductCatalogueService',
+        // Product
+        'App\Services\Interfaces\Product\ProductServiceInterface' => 'App\Services\Product\ProductService',
         // // Post
         // 'App\Services\Interfaces\PostServiceInterface' => 'App\Services\PostService',
         // // PostCatalogue
@@ -33,10 +37,7 @@ class AppServiceProvider extends ServiceProvider
         // 'App\Services\Interfaces\GenerateServiceInterface' => 'App\Services\GenerateService',
         // // Permission
         // 'App\Services\Interfaces\PermissionServiceInterface' => 'App\Services\PermissionService',
-        // // ProductCatalogue
-        // 'App\Services\Interfaces\ProductCatalogueServiceInterface' => 'App\Services\ProductCatalogueService',
-        // // Product
-        // 'App\Services\Interfaces\ProductServiceInterface' => 'App\Services\ProductService',
+
         // // AttributeCatalogue
         // 'App\Services\Interfaces\AttributeCatalogueServiceInterface' => 'App\Services\AttributeCatalogueService',
         // // Attribute

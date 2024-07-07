@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Requests\V1\User;
-
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
+namespace App\Http\Requests\User;
 
 use App\Enums\ResponseEnum;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreUserRequest extends FormRequest
+class StoreUserCatalogueRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,38 +25,28 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|string|email|unique:users',
-            'phone' => 'required|unique:users|regex:/(0)[0-9]{9}/',
-            'fullname' => 'required|string',
-            'user_catalogue_id' => 'required|integer|gt:0',
-            'password' => 'required|string|min:6',
-
+            'name' => 'required',
+            'description' => 'required',
         ];
     }
 
     public function attributes()
     {
         return [
-            'email' => 'Email',
-            'fullname' => 'Họ tên thành viên',
-            'phone' => 'Số điện thoại',
-            'user_catalogue_id' => 'Nhóm thành viên',
-            'password' => 'Mật khẩu',
-
+            'name' => 'Tên nhóm thành viên',
+            'description' => 'Mô tả nhóm thành viên',
         ];
     }
 
     public function messages()
     {
-        return __('request.messages') + [
-            'phone.regex' => 'Số điện thoại không đúng dạng.'
-        ];
+        return __('request.messages');
     }
 
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'messages' => $validator->errors(),
-        ], 422));
+        ], ResponseEnum::UNPROCESSABLE_ENTITY));
     }
 }

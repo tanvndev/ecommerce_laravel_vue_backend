@@ -17,6 +17,14 @@ class AppRepositoryProvider extends ServiceProvider
         'App\Repositories\Interfaces\User\UserRepositoryInterface' => 'App\Repositories\User\UserRepository',
         // UserCatalogue
         'App\Repositories\Interfaces\User\UserCatalogueRepositoryInterface' => 'App\Repositories\User\UserCatalogueRepository',
+        // Province
+        'App\Repositories\Interfaces\Location\ProvinceRepositoryInterface' => 'App\Repositories\Location\ProvinceRepository',
+        // District
+        'App\Repositories\Interfaces\Location\DistrictRepositoryInterface' => 'App\Repositories\Location\DistrictRepository',
+        // ProductCatalogue
+        'App\Repositories\Interfaces\Product\ProductCatalogueRepositoryInterface' => 'App\Repositories\Product\ProductCatalogueRepository',
+        // Product
+        'App\Repositories\Interfaces\Product\ProductRepositoryInterface' => 'App\Repositories\Product\ProductRepository',
         // // Post
         // 'App\Repositories\Interfaces\PostRepositoryInterface' => 'App\Repositories\PostRepository',
         // // PostCatalogue
@@ -27,16 +35,10 @@ class AppRepositoryProvider extends ServiceProvider
         // 'App\Repositories\Interfaces\GenerateRepositoryInterface' => 'App\Repositories\GenerateRepository',
         // // Permission
         // 'App\Repositories\Interfaces\PermissionRepositoryInterface' => 'App\Repositories\PermissionRepository',
-        // Province
-        'App\Repositories\Interfaces\Location\ProvinceRepositoryInterface' => 'App\Repositories\Location\ProvinceRepository',
-        // District
-        'App\Repositories\Interfaces\Location\DistrictRepositoryInterface' => 'App\Repositories\Location\DistrictRepository',
+
         // // Router
         // 'App\Repositories\Interfaces\RouterRepositoryInterface' => 'App\Repositories\RouterRepository',
-        // // ProductCatalogue
-        // 'App\Repositories\Interfaces\ProductCatalogueRepositoryInterface' => 'App\Repositories\ProductCatalogueRepository',
-        // // Product
-        // 'App\Repositories\Interfaces\ProductRepositoryInterface' => 'App\Repositories\ProductRepository',
+
         // // AttributeCatalogue
         // 'App\Repositories\Interfaces\AttributeCatalogueRepositoryInterface' => 'App\Repositories\AttributeCatalogueRepository',
         // // Attribute
